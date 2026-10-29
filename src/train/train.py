@@ -1,0 +1,90 @@
+from pathlib import Path
+
+import joblib
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score, roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+
+# Project root directory
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+DATA_PATH = PROJECT_ROOT / "churn_v2.csv"
+MODEL_PATH = PROJECT_ROOT / "model.joblib"
+
+NUMERIC_FEATURES = [
+    "tenure_months",
+    "monthly_fee",
+    "support_calls",
+]
+
+CATEGORICAL_FEATURES = [
+    "contract",
+    "internet_service",
+]
+
+
+def train_model():
+    # Load training data
+    df = pd.read_csv(DATA_PATH)
+
+    # Separate features and target
+    X = df[NUMERIC_FEATURES + CATEGORICAL_FEATURES]
+    y = df["churn"]
+
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
+
+    # Build the machine learning pipeline
+    model = Pipeline(
+        [
+            (
+                "prep",
+                ColumnTransformer(
+                    [
+                        (
+                            "num",
+                            StandardScaler(),
+                            NUMERIC_FEATURES,
+                        ),
+                        (
+                            "cat",
+                            OneHotEncoder(handle_unknown="ignore"),
+                            CATEGORICAL_FEATURES,
+                        ),
+                    ]
+                ),
+            ),
+            ("clf", LogisticRegression(max_iter=1000)),
+        ]
+    )
+
+    # Train the model
+    model.fit(X_train, y_train)
+
+    # Evaluate the model
+    probabilities = model.predict_proba(X_test)[:, 1]
+
+    f1 = f1_score(y_test, probabilities > 0.5)
+    auc = roc_auc_score(y_test, probabilities)
+
+    # Save the trained model
+    joblib.dump(model, MODEL_PATH)
+
+    print(f"F1 score: {f1:.3f}")
+    print(f"ROC-AUC: {auc:.3f}")
+    print(f"Model saved to: {MODEL_PATH}")
+
+
+if __name__ == "__main__":
+    train_model()

@@ -1,0 +1,17 @@
+
+.venv/
+.venv2/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+.git/
+.github/
+tests/
+*.pyc
+*.pyo
+*.log
+pain_log.txt
+pain_log_template.txt
+lab1_baseline.ipynb
+churn_v1.csv
+sample_request*.json
