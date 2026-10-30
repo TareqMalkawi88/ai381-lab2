@@ -1,6 +1,9 @@
 pandas==2.2.3
 scikit-learn==1.6.1
 joblib==1.4.2
-fastapi==0.115.12
+fastapi==0.162.0
+starlette==1.10.0
 uvicorn==0.34.0
 pydantic==2.10.6
+msgpack==1.2.3
+urllib3==2.8.0
