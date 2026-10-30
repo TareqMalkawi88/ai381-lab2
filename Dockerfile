@@ -11,8 +11,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 WORKDIR /build
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --upgrade wheel setuptools
 
 # Stage 2: Runtime image
 FROM python:3.11.9-slim-bookworm AS runtime
