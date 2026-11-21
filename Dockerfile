@@ -53,8 +53,7 @@ RUN useradd --create-home --uid 10001 appuser
 
 # Copy only files needed by the API
 COPY src/ ./src/
-COPY model.joblib .
-COPY churn_v2.csv .
+COPY artifacts/model.joblib ./model.joblib
 
 # Run as an unprivileged user
 USER appuser

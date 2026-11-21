@@ -1,3 +1,4 @@
+
 from pathlib import Path
 
 import joblib
@@ -11,7 +12,7 @@ MODEL_PATH = PROJECT_ROOT / "model.joblib"
 
 FEATURES = [
     "tenure_months",
-    "monthly_fee",
+    "monthly_charges",
     "support_calls",
     "contract",
     "internet_service",
@@ -40,8 +41,11 @@ def health():
 @app.post("/predict")
 def predict(customer: CustomerInput):
     data = customer.model_dump()
-    X = pd.DataFrame([data], columns=FEATURES)
 
+    # Match the feature name expected by the trained model.
+    data["monthly_charges"] = data.pop("monthly_fee")
+
+    X = pd.DataFrame([data], columns=FEATURES)
     probability = float(model.predict_proba(X)[0, 1])
 
     return {"churn_probability": round(probability, 3)}
