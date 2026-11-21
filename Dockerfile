@@ -43,6 +43,13 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# Build lineage information
+ARG GIT_SHA=unknown
+ARG IMAGE_TAG=unknown
+
+ENV GIT_SHA=${GIT_SHA}
+ENV IMAGE_TAG=${IMAGE_TAG}
+
 # Copy installed dependencies from builder
 COPY --from=builder /opt/venv /opt/venv
 

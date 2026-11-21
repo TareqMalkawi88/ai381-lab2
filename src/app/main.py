@@ -1,5 +1,5 @@
-
 import json
+import os
 from pathlib import Path
 
 import joblib
@@ -9,15 +9,21 @@ from pydantic import BaseModel, ConfigDict, Field
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+# Model path: prefer the promoted champion artifact.
 MODEL_PATH = PROJECT_ROOT / "artifacts" / "model.joblib"
 
 if not MODEL_PATH.exists():
     MODEL_PATH = PROJECT_ROOT / "model.joblib"
-    
+
+# Metadata path.
 METADATA_PATH = PROJECT_ROOT / "metadata.json"
 
 if not METADATA_PATH.exists():
     METADATA_PATH = PROJECT_ROOT / "artifacts" / "metadata.json"
+
+# Build lineage information.
+COMMIT_SHA = os.getenv("GIT_SHA", "unknown")
+IMAGE_TAG = os.getenv("IMAGE_TAG", "unknown")
 
 FEATURES = [
     "tenure_months",
@@ -48,7 +54,10 @@ class CustomerInput(BaseModel):
 def health():
     return {
         "status": "ok",
-        "model_version": metadata["model_version"],
+        "model_version": COMMIT_SHA,
+        "commit_sha": COMMIT_SHA,
+        "image_tag": IMAGE_TAG,
+        "mlflow_run_id": metadata["mlflow_run_id"],
     }
 
 
