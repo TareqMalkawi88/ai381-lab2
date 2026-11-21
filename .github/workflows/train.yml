@@ -6,10 +6,10 @@ name: train-and-gate
 on:
   pull_request:
     branches: [main]
-    paths: ["src/**", "data/**", "scripts/**", "requirements*.txt", "artifacts/**", ".github/workflows/train.yml"]
+    paths: ["src/train/**", "data/**", "scripts/**", "requirements*.txt", "artifacts/**"]
   push:
     branches: [main]
-    paths: ["src/**", "data/**", "scripts/**", "requirements*.txt", "artifacts/**", ".github/workflows/train.yml"]
+    paths: ["src/train/**", "data/**", "scripts/**", "requirements*.txt", "artifacts/**"]
   workflow_dispatch:
 
 permissions:
