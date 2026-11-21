@@ -16,3 +16,8 @@ lab1_baseline.ipynb
 churn_v1.csv
 sample_request*.json
 /app/
+# Lab 3 local environment and MLflow data
+.venv312/
+mlflow.db
+mlruns/
+mlartifacts/

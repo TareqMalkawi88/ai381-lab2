@@ -20,7 +20,6 @@ RUN pip install --no-cache-dir --upgrade pip wheel setuptools && \
     pip uninstall -y pip setuptools wheel
 
 
-
 FROM python:3.11.9-slim-bookworm@sha256:8fb099199b9f2d70342674bd9dbccd3ed03a258f26bbd1d556822c6dfc60c317 AS runtime
 
 # Update system packages
@@ -29,7 +28,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Remove unused system Python packaging tools.
-# The application uses dependencies from /opt/venv.
 RUN rm -rf \
     /usr/local/lib/python3.11/site-packages/pip \
     /usr/local/lib/python3.11/site-packages/pip-*.dist-info \
@@ -51,10 +49,12 @@ COPY --from=builder /opt/venv /opt/venv
 # Create a non-root user
 RUN useradd --create-home --uid 10001 appuser
 
-# Copy only files needed by the API
+# Copy application files
 COPY src/ ./src/
-COPY model.joblib .
-COPY churn_v2.csv .
+
+# Copy the promoted champion and its metadata
+COPY artifacts/model.joblib ./model.joblib
+COPY artifacts/metadata.json ./metadata.json
 
 # Run as an unprivileged user
 USER appuser
