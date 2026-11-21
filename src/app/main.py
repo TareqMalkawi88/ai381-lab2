@@ -9,8 +9,15 @@ from pydantic import BaseModel, ConfigDict, Field
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-MODEL_PATH = PROJECT_ROOT / "model.joblib"
+MODEL_PATH = PROJECT_ROOT / "artifacts" / "model.joblib"
+
+if not MODEL_PATH.exists():
+    MODEL_PATH = PROJECT_ROOT / "model.joblib"
+    
 METADATA_PATH = PROJECT_ROOT / "metadata.json"
+
+if not METADATA_PATH.exists():
+    METADATA_PATH = PROJECT_ROOT / "artifacts" / "metadata.json"
 
 FEATURES = [
     "tenure_months",
