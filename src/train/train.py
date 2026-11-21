@@ -9,7 +9,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-
 # Project root directory
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
